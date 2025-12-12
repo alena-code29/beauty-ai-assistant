@@ -1,9 +1,10 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <title>Beauty AI Assistant — сервис подбора ухода</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+
   <style>
     /* Спокойная фирменная палитра */
     :root {
@@ -130,6 +131,13 @@
       font-size: 16px;
     }
 
+    ul {
+      margin: 6px 0 12px 20px;
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
     .tab-kicker {
       font-size: 13px;
       font-weight: 600;
@@ -137,6 +145,12 @@
       letter-spacing: 0.14em;
       color: #555;
       margin-bottom: 6px;
+    }
+
+    .note {
+      font-size: 14px;
+      color: #555;
+      margin-top: 6px;
     }
 
     /* Форма входа */
@@ -176,25 +190,44 @@
       background: #ffffff;
     }
 
-    .btn {
-  padding: 11px 22px;
-  border-radius: 999px;
-  border: none;
-  background: var(--accent);
-  color: #111;
-  font-weight: 700;
-  font-size: 15px;
-  cursor: pointer;
-  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
-  transition: all 0.2s;
-  margin-top: 14px;
-}
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
 
+    .field {
+      margin-bottom: 10px;
+    }
+
+    .btn {
+      padding: 11px 22px;
+      border-radius: 999px;
+      border: none;
+      background: var(--accent);
+      color: #111;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+      transition: all 0.2s;
+      margin-top: 14px; /* чтобы кнопка была чуть ниже пароля */
+    }
 
     .btn:hover {
       background: var(--accent-dark);
       transform: translateY(-1px);
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .error {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #b91c1c;
     }
 
     .tabs-content {
@@ -204,6 +237,7 @@
     .tab {
       display: none;
     }
+
     .tab.active {
       display: block;
     }
@@ -226,6 +260,7 @@
     .panel-title {
       font-weight: 600;
       margin-bottom: 10px;
+      font-size: 16px;
     }
 
     .pill {
@@ -243,6 +278,10 @@
       padding: 8px 0;
       border-bottom: 1px dashed #ccc;
       font-size: 15px;
+    }
+
+    .recommendation:last-child {
+      border-bottom: none;
     }
 
     /* Вкладки */
@@ -291,7 +330,33 @@
       box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
       display: none;
     }
+
+    @media (max-width: 900px) {
+      .assistant-layout {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
+
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+      m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+      m[i].l=1*new Date();
+      k=e.createElement(t),a=e.getElementsByTagName(t)[0];
+      k.async=1;k.src=r;a.parentNode.insertBefore(k,a)
+    })(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(105803107, "init", {
+      clickmap:true,
+      trackLinks:true,
+      accurateTrackBounce:true,
+      webvisor:true
+    });
+  </script>
+  <noscript><div><img src="https://mc.yandex.ru/watch/105803107" style="position:absolute; left:-9999px;" alt=""/></div></noscript>
+  <!-- /Yandex.Metrika counter -->
+
 </head>
 <body>
 
@@ -325,16 +390,20 @@
         </p>
 
         <h2>Вход в сервис</h2>
+        <p class="note">
+          Для доступа к функционалу ассистента используйте тестовый аккаунт:
+          user@example.com / 123456.
+        </p>
         <form id="loginForm" class="login-form">
           <div class="field">
-            <label>E-mail</label>
+            <label for="email">E-mail</label>
             <input type="email" id="email" placeholder="user@example.com" required>
           </div>
           <div class="field">
-            <label>Пароль</label>
+            <label for="password">Пароль</label>
             <input type="password" id="password" placeholder="123456" required>
           </div>
-          <button class="btn">Войти</button>
+          <button type="submit" class="btn">Войти</button>
           <div id="error" class="error" style="display:none;"></div>
         </form>
       </section>
@@ -348,22 +417,36 @@
           <div class="panel">
             <div class="panel-title">Анкета клиента</div>
 
-            <label>Тип кожи</label>
-            <select id="skinType">
-              <option value="normal">Нормальная</option>
-              <option value="dry">Сухая</option>
-              <option value="oily">Жирная</option>
-              <option value="combo">Комбинированная</option>
-              <option value="sensitive">Чувствительная</option>
-            </select>
+            <div class="field">
+              <label for="skinType">Тип кожи</label>
+              <select id="skinType">
+                <option value="normal">Нормальная</option>
+                <option value="dry">Сухая</option>
+                <option value="oily">Жирная</option>
+                <option value="combo">Комбинированная</option>
+                <option value="sensitive">Чувствительная</option>
+              </select>
+            </div>
 
-            <label style="margin-top:10px">Проблемы кожи</label>
-            <textarea id="skinProblems"></textarea>
+            <div class="field">
+              <label for="skinProblems">Проблемы кожи</label>
+              <textarea id="skinProblems" placeholder="Например: высыпания, сухость, покраснения..."></textarea>
+            </div>
 
-            <label style="margin-top:10px">Бюджет (₽)</label>
-            <input type="number" id="budget">
+            <div class="field">
+              <label for="budget">Бюджет (₽)</label>
+              <input type="number" id="budget" placeholder="Например: 3000">
+            </div>
 
-            <button class="btn" id="recommendBtn" style="margin-top:12px">Подобрать уход</button>
+            <div class="field">
+              <label>Предпочтения</label>
+              <span class="pill">без спирта</span>
+              <span class="pill">без отдушек</span>
+              <span class="pill">cruelty-free</span>
+              <span class="pill">K-beauty</span>
+            </div>
+
+            <button type="button" class="btn" id="recommendBtn">Подобрать уход</button>
           </div>
 
           <div class="panel">
@@ -380,10 +463,17 @@
         <div class="tab-kicker">Вкладка 3 — материалы</div>
         <h1>Материалы и интеграции</h1>
 
+        <h2>Документация</h2>
         <ul>
           <li>Описание продукта</li>
           <li>UML-диаграммы</li>
-          <li>Данные аналитики</li>
+          <li>Отчёты по аналитике</li>
+        </ul>
+
+        <h2>Аналитика</h2>
+        <ul>
+          <li>Яндекс.Метрика — отслеживание поведения пользователей.</li>
+          <li>Google Analytics — расширенная веб-аналитика (опционально).</li>
         </ul>
       </section>
     </div>
@@ -403,14 +493,24 @@
   const tabButtons = document.querySelectorAll(".tab-btn");
   const tabs = document.querySelectorAll(".tab");
   const logoutBtn = document.getElementById("logoutBtn");
+  const recommendBtn = document.getElementById("recommendBtn");
+  const recommendationsBlock = document.getElementById("recommendations");
 
   let isLoggedIn = false;
 
+  // Helper для безопасной отправки цели в Метрику
+  function trackGoal(name) {
+    if (typeof ym === "function") {
+      ym(105803107, "reachGoal", name);
+    }
+  }
+
+  // Обработка логина
   loginForm.addEventListener("submit", e => {
     e.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
 
     if (email === "user@example.com" && password === "123456") {
       isLoggedIn = true;
@@ -420,6 +520,7 @@
       document.querySelector('.tab-btn[data-tab="3"]').style.display = "block";
       logoutBtn.style.display = "block";
 
+      trackGoal("login_success");
       alert("Вход выполнен");
     } else {
       errorDiv.textContent = "Неверный e-mail или пароль.";
@@ -427,6 +528,7 @@
     }
   });
 
+  // Переключение вкладок
   tabButtons.forEach(btn => {
     btn.addEventListener("click", () => {
       const tab = btn.dataset.tab;
@@ -441,9 +543,12 @@
 
       tabs.forEach(t => t.classList.remove("active"));
       document.getElementById(`tab${tab}`).classList.add("active");
+
+      trackGoal("tab_" + tab);
     });
   });
 
+  // Выход
   logoutBtn.onclick = () => {
     isLoggedIn = false;
     logoutBtn.style.display = "none";
@@ -457,18 +562,24 @@
     tabs.forEach(t => t.classList.remove("active"));
     document.getElementById("tab1").classList.add("active");
 
+    trackGoal("logout");
     alert("Вы вышли из системы.");
   };
 
-  document.getElementById("recommendBtn").onclick = () => {
+  // Кнопка "Подобрать уход"
+  recommendBtn.onclick = () => {
     const type = document.getElementById("skinType").value;
     const budget = document.getElementById("budget").value;
 
-    document.getElementById("recommendations").innerHTML = `
-      <div class="recommendation"><b>Очищение:</b> Подберите мягкий гель для ${type} кожи.</div>
-      <div class="recommendation"><b>Увлажнение:</b> Лёгкий крем, адаптированный под ваши особенности.</div>
-      <div class="recommendation"><b>SPF:</b> Используйте защиту каждый день.</div>
-      <p class="note">Рекомендации примерные.</p>
+    trackGoal("recommendation_click");
+
+    const budgetText = budget ? ` в бюджете до ~${budget} ₽` : "";
+
+    recommendationsBlock.innerHTML = `
+      <div class="recommendation"><b>Очищение:</b> мягкий гель для ${type} кожи.</div>
+      <div class="recommendation"><b>Увлажнение:</b> лёгкий крем с гиалуроновой кислотой${budgetText}.</div>
+      <div class="recommendation"><b>Защита:</b> дневной SPF-крем, адаптированный под ваш тип кожи.</div>
+      <p class="note">Рекомендации демонстрационные и не являются медицинским советом.</p>
     `;
   };
 </script>
