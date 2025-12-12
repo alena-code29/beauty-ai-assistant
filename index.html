@@ -1,0 +1,477 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Beauty AI Assistant — сервис подбора ухода</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* Спокойная фирменная палитра */
+    :root {
+      --bg-main: #f5ffcc;       /* мягкий спокойный лаймовый фон */
+      --bg-card: #ffffff;       /* белые панели */
+      --bg-panel: #f9ffe6;      /* чуть теплее */
+      --accent: #d7ff2f;        /* лаймово-жёлтый акцент */
+      --accent-dark: #b0d60f;   /* более глубокий лайм */
+      --accent-soft: #f2ffd0;   /* светлая подложка */
+      --text-main: #000000;     /* чёрный текст */
+      --text-muted: #333333;
+      --border-soft: #cfe77a;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.18);
+      --radius-lg: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(
+        135deg,
+        #f5ffcc 0%,
+        #f9ffe6 50%,
+        #ffffff 100%
+      );
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Шапка */
+    header {
+      width: 100%;
+      padding: 18px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.85);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, #ffffff, #d7ff2f 70%, #b0d60f 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #111;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .logo-text-title {
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    .logo-text-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .header-badge {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #111;
+      color: #d7ff2f;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1180px;
+      min-height: 540px;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-soft);
+      padding: 24px 26px 40px;
+      position: relative;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: 30px;
+    }
+
+    h2 {
+      margin-top: 22px;
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .tab-kicker {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #555;
+      margin-bottom: 6px;
+    }
+
+    /* Форма входа */
+    .login-form {
+      margin-top: 18px;
+      max-width: 380px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-soft);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border-radius: 12px;
+      border: 1px solid #cbd5c0;
+      font-size: 15px;
+      background: #f9faf7;
+      transition: all 0.2s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #d7ff2f;
+      box-shadow: 0 0 0 3px rgba(215, 255, 47, 0.35);
+      background: #ffffff;
+    }
+
+    .btn {
+  padding: 11px 22px;
+  border-radius: 999px;
+  border: none;
+  background: var(--accent);
+  color: #111;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s;
+  margin-top: 14px;
+}
+
+
+    .btn:hover {
+      background: var(--accent-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
+    }
+
+    .tabs-content {
+      margin-top: 6px;
+    }
+
+    .tab {
+      display: none;
+    }
+    .tab.active {
+      display: block;
+    }
+
+    /* Ассистент */
+    .assistant-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 2.4fr);
+      gap: 24px;
+      margin-top: 18px;
+    }
+
+    .panel {
+      border-radius: 18px;
+      padding: 18px 20px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-soft);
+    }
+
+    .panel-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      margin: 3px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #222;
+      font-size: 12px;
+      border: 1px solid var(--border-soft);
+    }
+
+    .recommendation {
+      padding: 8px 0;
+      border-bottom: 1px dashed #ccc;
+      font-size: 15px;
+    }
+
+    /* Вкладки */
+    .bottom-right-buttons {
+      position: absolute;
+      right: 24px;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .tab-btn {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      border: none;
+      background: #111;
+      opacity: 0.3;
+      color: #d7ff2f;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .tab-btn.active {
+      opacity: 1;
+    }
+
+    .tab-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Кнопка выхода */
+    .logout-btn {
+      position: absolute;
+      top: 82px;
+      right: 28px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: #111;
+      color: #d7ff2f;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">BA</div>
+    <div>
+      <div class="logo-text-title">Beauty AI Assistant</div>
+      <div class="logo-text-sub">умный подбор ухода в сети «Золотое яблоко»</div>
+    </div>
+  </div>
+  <div class="header-badge">
+    Профессиональный сервис
+  </div>
+</header>
+
+<main>
+  <div class="app">
+
+    <button id="logoutBtn" class="logout-btn">Выйти</button>
+
+    <div id="tabs" class="tabs-content">
+
+      <!-- Вкладка 1 -->
+      <section id="tab1" class="tab active">
+        <div class="tab-kicker">Вкладка 1 — вход и описание</div>
+        <h1>Онлайн-сервис Beauty AI Assistant</h1>
+        <p>
+          Beauty AI Assistant — цифровой помощник, подбирающий персональный уход за кожей
+          с учётом типа кожи, текущего состояния и индивидуальных особенностей.
+        </p>
+
+        <h2>Вход в сервис</h2>
+        <form id="loginForm" class="login-form">
+          <div class="field">
+            <label>E-mail</label>
+            <input type="email" id="email" placeholder="user@example.com" required>
+          </div>
+          <div class="field">
+            <label>Пароль</label>
+            <input type="password" id="password" placeholder="123456" required>
+          </div>
+          <button class="btn">Войти</button>
+          <div id="error" class="error" style="display:none;"></div>
+        </form>
+      </section>
+
+      <!-- Вкладка 2 -->
+      <section id="tab2" class="tab">
+        <div class="tab-kicker">Вкладка 2 — подбор ухода</div>
+        <h1>Интерфейс Beauty AI Assistant</h1>
+
+        <div class="assistant-layout">
+          <div class="panel">
+            <div class="panel-title">Анкета клиента</div>
+
+            <label>Тип кожи</label>
+            <select id="skinType">
+              <option value="normal">Нормальная</option>
+              <option value="dry">Сухая</option>
+              <option value="oily">Жирная</option>
+              <option value="combo">Комбинированная</option>
+              <option value="sensitive">Чувствительная</option>
+            </select>
+
+            <label style="margin-top:10px">Проблемы кожи</label>
+            <textarea id="skinProblems"></textarea>
+
+            <label style="margin-top:10px">Бюджет (₽)</label>
+            <input type="number" id="budget">
+
+            <button class="btn" id="recommendBtn" style="margin-top:12px">Подобрать уход</button>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">Рекомендации</div>
+            <div id="recommendations">
+              <p class="note">Здесь появится рекомендация после нажатия кнопки.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Вкладка 3 -->
+      <section id="tab3" class="tab">
+        <div class="tab-kicker">Вкладка 3 — материалы</div>
+        <h1>Материалы и интеграции</h1>
+
+        <ul>
+          <li>Описание продукта</li>
+          <li>UML-диаграммы</li>
+          <li>Данные аналитики</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Переключатели вкладок -->
+    <div class="bottom-right-buttons">
+      <button class="tab-btn active" data-tab="1">01</button>
+      <button class="tab-btn" data-tab="2" style="display:none;">02</button>
+      <button class="tab-btn" data-tab="3" style="display:none;">03</button>
+    </div>
+  </div>
+</main>
+
+<script>
+  const loginForm = document.getElementById("loginForm");
+  const errorDiv = document.getElementById("error");
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const tabs = document.querySelectorAll(".tab");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  let isLoggedIn = false;
+
+  loginForm.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    if (email === "user@example.com" && password === "123456") {
+      isLoggedIn = true;
+      errorDiv.style.display = "none";
+
+      document.querySelector('.tab-btn[data-tab="2"]').style.display = "block";
+      document.querySelector('.tab-btn[data-tab="3"]').style.display = "block";
+      logoutBtn.style.display = "block";
+
+      alert("Вход выполнен");
+    } else {
+      errorDiv.textContent = "Неверный e-mail или пароль.";
+      errorDiv.style.display = "block";
+    }
+  });
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const tab = btn.dataset.tab;
+
+      if (!isLoggedIn && tab !== "1") {
+        alert("Сначала войдите в систему.");
+        return;
+      }
+
+      tabButtons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      tabs.forEach(t => t.classList.remove("active"));
+      document.getElementById(`tab${tab}`).classList.add("active");
+    });
+  });
+
+  logoutBtn.onclick = () => {
+    isLoggedIn = false;
+    logoutBtn.style.display = "none";
+
+    document.querySelector('.tab-btn[data-tab="2"]').style.display = "none";
+    document.querySelector('.tab-btn[data-tab="3"]').style.display = "none";
+
+    tabButtons.forEach(b => b.classList.remove("active"));
+    document.querySelector('.tab-btn[data-tab="1"]').classList.add("active");
+
+    tabs.forEach(t => t.classList.remove("active"));
+    document.getElementById("tab1").classList.add("active");
+
+    alert("Вы вышли из системы.");
+  };
+
+  document.getElementById("recommendBtn").onclick = () => {
+    const type = document.getElementById("skinType").value;
+    const budget = document.getElementById("budget").value;
+
+    document.getElementById("recommendations").innerHTML = `
+      <div class="recommendation"><b>Очищение:</b> Подберите мягкий гель для ${type} кожи.</div>
+      <div class="recommendation"><b>Увлажнение:</b> Лёгкий крем, адаптированный под ваши особенности.</div>
+      <div class="recommendation"><b>SPF:</b> Используйте защиту каждый день.</div>
+      <p class="note">Рекомендации примерные.</p>
+    `;
+  };
+</script>
+
+</body>
+</html>
