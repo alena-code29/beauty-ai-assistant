@@ -364,377 +364,419 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           на основе параметров кожи и предпочтений.
         </p>
 
-        <h2>Что доступно в сервисе</h2>
-        <ul>
-          <li>Описание и логика сервиса (раздел «Описание»);</li>
-          <li>Интерактивный сценарий подбора ухода (раздел «Ассистент»);</li>
-          <li>Аналитика, цели и отчётность (раздел «Аналитика»);</li>
-          <li>Формализованные требования к сервису (раздел «Техническое задание»).</li>
-        </ul>
+        <div class="desc-page">
 
-        <p class="note"><b>Перейдите в раздел «Ассистент», чтобы получить пример рекомендаций.</b></p>
-      </section>
-
-      <!-- TAB 2 -->
-      <section id="tab2" class="tab">
-        <h1>Интерфейс ассистента</h1>
-        <p>
-          Заполните параметры кожи и предпочтения — ассистент сформирует персональный базовый план ухода.
-          Рекомендации демонстрационные, сценарий отражает работу сервиса.
-        </p>
-
-        <div class="assistant-layout">
-          <div class="panel" aria-label="Анкета клиента">
-            <div class="panel-title">Анкета клиента</div>
-
-            <div class="field">
-              <label for="skinType">Тип кожи</label>
-              <select id="skinType">
-                <option value="normal">Нормальная</option>
-                <option value="dry">Сухая</option>
-                <option value="oily">Жирная</option>
-                <option value="combo">Комбинированная</option>
-                <option value="sensitive">Чувствительная</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label for="skinProblems">Основные запросы</label>
-              <textarea id="skinProblems" placeholder="Например: высыпания, сухость, покраснения, тусклый тон..."></textarea>
-            </div>
-
-            <div class="field">
-              <label for="budget">Ориентировочный бюджет (₽)</label>
-              <input type="number" id="budget" placeholder="Например: 3000">
-            </div>
-
-            <div class="field">
-              <label>Предпочтения</label>
-              <div>
-                <span class="pill">без спирта</span>
-                <span class="pill">без отдушек</span>
-                <span class="pill">cruelty-free</span>
-                <span class="pill">K-beauty</span>
-              </div>
-            </div>
-
-            <button type="button" class="btn" id="recommendBtn">Подобрать уход</button>
-            <div class="note">Событие <b>recommendation_click</b> отправляется в Метрику при нажатии.</div>
-          </div>
-
-          <div class="panel" aria-label="Рекомендации ассистента">
-            <div class="panel-title">Рекомендации ассистента</div>
-            <div id="recommendations">
-              <p class="note">Нажмите «Подобрать уход», чтобы увидеть пример рекомендаций.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 3 -->
-      <section id="tab3" class="tab">
-        <h1>Веб-аналитика и отчётность</h1>
-
-        <h2>1. Сбор данных</h2>
-        <ul>
-          <li><b>Яндекс.Метрика</b>: визиты, источники, глубина просмотра, вебвизор, карты кликов и скроллинга.</li>
-          <li><b>GA4</b> (при необходимости): воронки, анализ каналов, события и аудитории.</li>
-          <li><b>Качественные данные</b>: формы обратной связи и опросы для понимания ожиданий пользователей.</li>
-        </ul>
-
-        <h2>2. Техническая подготовка</h2>
-        <ul>
-          <li>логичная структура разделов (Описание / Ассистент / Аналитика / ТЗ);</li>
-          <li>отслеживание кликов и переходов;</li>
-          <li>читаемый интерфейс и доступность (контраст, крупные элементы).</li>
-        </ul>
-
-        <h2>3. Цели и события</h2>
-        <ul>
-          <li><b>login_success</b> — успешный вход в систему;</li>
-          <li><b>tab_1 / tab_2 / tab_3 / tab_4</b> — переходы между разделами;</li>
-          <li><b>recommendation_click</b> — запрос подбора ухода;</li>
-          <li><b>logout</b> — выход из аккаунта.</li>
-        </ul>
-
-        <h2>4. Что анализируется</h2>
-        <ul>
-          <li>источники трафика и динамика визитов;</li>
-          <li>поведенческие метрики: время, глубина, карта кликов;</li>
-          <li>конверсия: вход → ассистент → «Подобрать уход»;</li>
-          <li>поиск точек улучшения интерфейса по данным вебвизора.</li>
-        </ul>
-
-        <h2>5. Отчётность</h2>
-        <p>
-          На основании событий формируются отчёты по конверсиям и пользовательским сценариям.
-          При необходимости данные экспортируются в BI для дашбордов.
-        </p>
-      </section>
-
-      <!-- TAB 4: Техническое задание -->
-      <section id="tab4" class="tab">
-        <h1>Техническое задание</h1>
-        <p>
-          Документ определяет требования к веб-сервису Beauty AI Assistant:
-          функциональность, ограничения, требования к интерфейсу и аналитике,
-          а также критерии приёмки.
-        </p>
-
-        <div class="grid-2">
-          <div class="card">
-            <div class="tag">Проект</div>
-            <p><b>Название:</b> Beauty AI Assistant</p>
-            <p><b>Назначение:</b> персональный подбор ухода за кожей в экосистеме сети «Золотое яблоко»</p>
-            <p><b>Формат:</b> web-приложение (одностраничный интерфейс с разделами)</p>
-          </div>
-
-          <div class="card">
-            <div class="tag">Цели</div>
-            <ul>
-              <li>упростить подбор базового ухода по параметрам кожи;</li>
-              <li>повысить удобство и скорость выбора продуктов;</li>
-              <li>собрать данные о пользовательских сценариях для улучшения сервиса.</li>
-            </ul>
-          </div>
-        </div>
-
-        <h2>1. Область применения</h2>
-        <p>
-          Сервис предназначен для клиентов сети «Золотое яблоко» и может быть использован как в веб-версии,
-          так и как часть будущей интеграции в мобильное приложение/личный кабинет.
-        </p>
-
-        <h2>2. Пользователи и роли</h2>
-        <ul>
-          <li><b>Пользователь</b> — получает рекомендации по уходу и взаимодействует с интерфейсом.</li>
-          <li><b>Администратор/аналитик</b> — анализирует метрики, конверсии и события (через Метрику/GA4).</li>
-        </ul>
-
-        <h2>3. Функциональные требования</h2>
-
-        <h3>3.1 Авторизация</h3>
-        <ul>
-          <li>страница входа содержит поля e-mail и пароль;</li>
-          <li>после успешного входа экран авторизации скрывается, доступ открывается к разделам;</li>
-          <li>выход из аккаунта возвращает пользователя на страницу входа.</li>
-        </ul>
-
-        <h3>3.2 Раздел «Описание»</h3>
-        <ul>
-          <li>описание назначения сервиса и пользовательского сценария;</li>
-          <li>краткая навигационная подсказка по разделам.</li>
-        </ul>
-
-        <h3>3.3 Раздел «Ассистент»</h3>
-        <ul>
-          <li>форма анкеты (тип кожи, запросы, бюджет, предпочтения);</li>
-          <li>кнопка «Подобрать уход» формирует и отображает список рекомендаций;</li>
-          <li>интерфейс должен быть читаемым и понятным (крупные элементы, контраст).</li>
-        </ul>
-
-        <h3>3.4 Раздел «Аналитика»</h3>
-        <ul>
-          <li>описание инструментов аналитики и целей;</li>
-          <li>перечень метрик и подходов к отчётности.</li>
-        </ul>
-
-        <h3>3.5 Раздел «Техническое задание»</h3>
-        <ul>
-          <li>формализованные требования к сервису;</li>
-          <li>критерии приёмки и ограничения.</li>
-        </ul>
-
-        <h2>4. Нефункциональные требования</h2>
-        <div class="grid-2">
-          <div class="card">
-            <div class="tag">Интерфейс</div>
-            <ul>
-              <li>адаптивность (ПК/планшет/телефон);</li>
-              <li>высокая читаемость (контраст, размер шрифтов);</li>
-              <li>навигация фиксирована и доступна на всех экранах.</li>
-            </ul>
-          </div>
-          <div class="card">
-            <div class="tag">Производительность</div>
-            <ul>
-              <li>быстрая загрузка (статический сайт на GitHub Pages);</li>
-              <li>минимум внешних зависимостей;</li>
-              <li>корректная работа в современных браузерах.</li>
-            </ul>
-          </div>
-        </div>
-
-        <h2>5. Аналитика: события и цели</h2>
-        <ul>
-          <li><b>login_success</b> — успешный вход;</li>
-          <li><b>tab_1 / tab_2 / tab_3 / tab_4</b> — переход между разделами;</li>
-          <li><b>recommendation_click</b> — нажатие «Подобрать уход»;</li>
-          <li><b>logout</b> — выход из аккаунта.</li>
-        </ul>
-         
-          <h2>6. Безопасность и защита данных</h2>
-
-<h3>6.1 Доступ и авторизация</h3>
-<ul>
-  <li>Доступ к разделам «Описание», «Ассистент», «Аналитика», «Техническое задание» предоставляется только после входа в систему.</li>
-  <li>При выходе из аккаунта доступ к разделам закрывается, пользователь возвращается на экран авторизации.</li>
-  <li>Проверка полей e-mail и пароля обязательна (пустые значения не допускаются).</li>
-</ul>
-
-<h3>6.2 Обработка персональных данных</h3>
-<ul>
-  <li>Сервис не запрашивает и не хранит лишние персональные данные (кроме e-mail для демонстрации входа).</li>
-  <li>Пароль не сохраняется и не передаётся третьим лицам; используется только для проверки на стороне интерфейса.</li>
-  <li>Рекомендации формируются без сохранения введённых данных на сервере (в пределах текущей сессии браузера).</li>
-</ul>
-
-<h3>6.3 Безопасность публикации и передачи данных</h3>
-<ul>
-  <li>Размещение сайта осуществляется на GitHub Pages с доступом по HTTPS.</li>
-  <li>Для сторонних скриптов (Яндекс.Метрика) используются официальные источники подключения.</li>
-  <li>Запрещено добавлять в код приватные ключи, пароли и токены (если в будущем появятся интеграции).</li>
-</ul>
-
-<h3>6.4 Аналитика и конфиденциальность</h3>
-<ul>
-  <li>Яндекс.Метрика фиксирует только события и поведение на сайте (клики/переходы), без передачи паролей.</li>
-  <li>При использовании Вебвизора содержимое полей пароля не должно записываться (поле типа <b>password</b> скрывается автоматически).</li>
-  <li>При необходимости на сайте может быть добавлено уведомление о сборе аналитики (cookies/метрики).</li>
-</ul>
-
-
-        <h2>7. Критерии приёмки</h2>
-        <ul>
-          <li>вход/выход работают корректно, экран авторизации появляется только при выходе;</li>
-          <li>разделы доступны только после входа;</li>
-          <li>нажатие «Подобрать уход» отображает рекомендации и фиксируется в Метрике как цель;</li>
-          <li>переходы по разделам фиксируются как цели tab_1…tab_4;</li>
-          <li>интерфейс читабелен и стабилен при прокрутке.</li>
-        </ul>
-      </section>
-
-    </div>
+  <div class="desc-hero">
+    <h1>Beauty AI Assistant</h1>
+    <p class="lead">
+      Онлайн-сервис персонализированного подбора ухода и косметики для сети «Золотое яблоко».
+      Ассистент объединяет AI-анализ кожи, рекомендации и поддержку выбора товаров.
+    </p>
   </div>
-</main>
 
-<script>
-  function goal(name){
-    if (typeof ym === "function") ym(105803107, "reachGoal", name);
-  }
-  function $(id){ return document.getElementById(id); }
+  <div class="desc-grid">
+    <section class="panel">
+      <h2>Тема</h2>
+      <p>
+        Анализ внедрения продукта «Beauty AI Assistant» в сеть магазинов «Золотое яблоко»:
+        использование искусственного интеллекта для персонализации в розничной торговле косметикой.
+      </p>
+    </section>
 
-  const loginForm   = $("loginForm");
-  const loginScreen = $("loginScreen");
-  const tabsWrap    = $("tabs");
-  const errorBox    = $("error");
+    <section class="panel">
+      <h2>Цель</h2>
+      <p>
+        Разработка концепции внедрения инновационного AI-продукта в существующую бизнес-модель компании
+        и анализ влияния на ключевые процессы организации (маркетинг, продажи, сервис, аналитика).
+      </p>
+    </section>
 
-  const userPanel   = $("userPanel");
-  const userEmail   = $("userEmail");
-  const userAvatar  = $("userAvatar");
-  const logoutBtn   = $("logoutBtn");
+    <section class="panel">
+      <h2>Задачи</h2>
+      <ul>
+        <li>Изучить специфику деятельности «Золотого яблока» и потребности в инновационных решениях.</li>
+        <li>Разработать техническую концепцию продукта Beauty AI Assistant.</li>
+        <li>Сформировать архитектуру системы и варианты интеграции с IT-решениями компании.</li>
+        <li>Построить UML-диаграммы структуры и поведения системы.</li>
+        <li>Провести SWOT-анализ и подготовить рекомендации по внедрению.</li>
+      </ul>
+    </section>
 
-  const navPanel    = $("navPanel");
-  const navButtons  = Array.from(document.querySelectorAll(".nav-btn"));
-  const tabs        = Array.from(document.querySelectorAll(".tab"));
+    <section class="panel">
+      <h2>Целевая аудитория</h2>
+      <p>
+        Решение ориентировано на клиентов сети, которым важны удобство выбора и персонализация,
+        а также на специалистов, принимающих решения о внедрении (IT-руководители, архитекторы,
+        менеджеры цифровой трансформации).
+      </p>
+      <div class="pill-row">
+        <span class="pill">18–35 лет — основной сегмент</span>
+        <span class="pill">Онлайн-покупки</span>
+        <span class="pill">Высокая цифровая грамотность</span>
+      </div>
+    </section>
+  </div>
 
-  let isLoggedIn = false;
+  <section class="panel">
+    <h2>Маркетинг-микс (4P)</h2>
+    <div class="two-col">
+      <div>
+        <h3>Product</h3>
+        <p>
+          Мобильный продукт с AI-анализом кожи, AR-примеркой, историей покупок, списками желаемого и интеграцией
+          с программой лояльности и каталогом товаров.
+        </p>
 
-  function showTab(num){
-    tabs.forEach(t => t.classList.remove("active"));
-    const active = $("tab" + num);
-    if (active) active.classList.add("active");
+        <h3>Price</h3>
+        <p>
+          Freemium-модель: базовый функционал доступен бесплатно, расширенные возможности — через подписку и/или premium-пакеты.
+        </p>
+      </div>
 
-    navButtons.forEach(b => b.classList.remove("active"));
-    const btn = document.querySelector(`.nav-btn[data-tab="${num}"]`);
-    if (btn) btn.classList.add("active");
+      <div>
+        <h3>Place</h3>
+        <p>
+          App Store / Google Play + офлайн-магазины (QR-коды), официальный сайт сервиса, интеграции с e-commerce.
+        </p>
 
-    goal("tab_" + num);
-  }
+        <h3>Promotion</h3>
+        <p>
+          Контент-маркетинг, блогеры/визажисты, демо-зоны в магазинах, email-коммуникации по базе лояльности,
+          партнерства с beauty-салонами.
+        </p>
+      </div>
+    </div>
+  </section>
 
-  function setLoggedIn(emailVal){
-    isLoggedIn = true;
+  <section class="panel">
+    <h2>SWOT-анализ</h2>
+    <div class="swot">
+      <div class="swot-card">
+        <h3>Strengths</h3>
+        <ul>
+          <li>Инновационность и персонализация клиентского опыта.</li>
+          <li>Рост конверсии и среднего чека за счёт точных рекомендаций.</li>
+          <li>Сбор данных о предпочтениях и поведении клиентов.</li>
+        </ul>
+      </div>
 
-    loginScreen.style.display = "none";
-    tabsWrap.style.display = "block";
+      <div class="swot-card">
+        <h3>Weaknesses</h3>
+        <ul>
+          <li>Затраты на разработку и внедрение AI-технологий.</li>
+          <li>Зависимость качества сервиса от точности ML-моделей.</li>
+          <li>Нагрузка на поддержку и развитие (компетенции/инфраструктура).</li>
+        </ul>
+      </div>
 
-    userPanel.style.display = "flex";
-    navPanel.style.display = "flex";
+      <div class="swot-card">
+        <h3>Opportunities</h3>
+        <ul>
+          <li>Позиционирование бренда как лидера цифровой трансформации.</li>
+          <li>Новые доходы: подписки и партнерские программы с брендами.</li>
+          <li>Развитие дополнительных сервисов на основе данных.</li>
+        </ul>
+      </div>
 
-    userEmail.textContent = emailVal;
-    userAvatar.textContent = emailVal.charAt(0).toUpperCase();
+      <div class="swot-card">
+        <h3>Threats</h3>
+        <ul>
+          <li>Конкуренты могут повторить идею.</li>
+          <li>Риски репутации при ошибочных рекомендациях.</li>
+          <li>Требования к персональным данным и безопасности.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-    goal("login_success");
-    showTab(1);
-  }
+  <section class="panel">
+    <h2>UML-диаграммы (по темам)</h2>
+    <p class="muted">
+      Ниже — готовые коды PlantUML. Их можно оставить как есть (для отчёта), либо сгенерировать PNG и вставить картинками.
+    </p>
 
-  function setLoggedOut(){
-    isLoggedIn = false;
+    <!-- ========== 1) ТЕХНИЧЕСКОЕ ЗАДАНИЕ: 2 диаграммы ========== -->
+    <div class="uml-block">
+      <h3>Техническое задание</h3>
 
-    tabsWrap.style.display = "none";
-    loginScreen.style.display = "block";
+      <details open>
+        <summary>Use Case — требования и роли</summary>
+        <pre class="code"><code>@startuml
+left to right direction
+actor "Клиент" as User
+actor "Администратор" as Admin
+actor "Система аналитики\n(GA4/Метрика)" as Analytics
+actor "Каталог/Заказы\n(экосистема)" as Catalog
 
-    userPanel.style.display = "none";
-    navPanel.style.display = "none";
+rectangle "Beauty AI Assistant" {
+  usecase "Регистрация/вход" as UC1
+  usecase "Заполнить профиль\nкожи" as UC2
+  usecase "AI-анализ кожи\n(фото/камера)" as UC3
+  usecase "Получить рекомендации\nухода/товаров" as UC4
+  usecase "AR-примерка" as UC5
+  usecase "Добавить в корзину\nи оформить заказ" as UC6
+  usecase "Сохранить историю\nи избранное" as UC7
+  usecase "Сбор событий\nи метрик" as UC8
+  usecase "Управление каталогом\nи моделями" as UC9
+  usecase "Просмотр отчетов\nи KPI" as UC10
+}
 
-    navButtons.forEach(b => b.classList.remove("active"));
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+User --> UC7
+Admin --> UC9
+Admin --> UC10
 
-    goal("logout");
-  }
+UC6 --> Catalog
+UC8 --> Analytics
+UC4 --> UC8
+UC1 --> UC8
+@enduml</code></pre>
+      </details>
 
-  loginForm.addEventListener("submit", (e) => {
-    e.preventDefault();
+      <details>
+        <summary>Component — состав подсистем</summary>
+        <pre class="code"><code>@startuml
+skinparam componentStyle rectangle
 
-    const emailVal = $("email").value.trim();
-    const passVal  = $("password").value.trim();
+component "Web UI\n(сайт/кабинет)" as UI
+component "Auth Service" as AUTH
+component "AI Skin Analyzer" as AI
+component "Recommender\n(ранжирование)" as REC
+component "AR Module" as AR
+component "Catalog API" as CAT
+component "Orders/Payments" as ORD
+component "Analytics Events\n(GA4/Метрика)" as AN
 
-    if (!emailVal || !passVal){
-      errorBox.textContent = "Пожалуйста, заполните e-mail и пароль.";
-      errorBox.style.display = "block";
-      return;
-    }
-    errorBox.style.display = "none";
-    setLoggedIn(emailVal);
-  });
+database "User DB" as UDB
+database "ML Models/Features" as MDB
 
-  navButtons.forEach(b => {
-    b.addEventListener("click", () => {
-      if (!isLoggedIn) return;
-      showTab(b.dataset.tab);
-    });
-  });
+UI --> AUTH
+AUTH --> UDB
 
-  logoutBtn.addEventListener("click", () => setLoggedOut());
+UI --> AI
+AI --> MDB
 
-  document.addEventListener("click", (e) => {
-    if (e.target && e.target.id === "recommendBtn") {
-      const type = $("skinType")?.value || "normal";
-      const budget = $("budget")?.value || "";
+UI --> REC
+REC --> CAT
 
-      goal("recommendation_click");
+UI --> AR
 
-      let skinLabel = "нормальной кожи";
-      if (type === "dry") skinLabel = "сухой кожи";
-      else if (type === "oily") skinLabel = "жирной кожи";
-      else if (type === "combo") skinLabel = "комбинированной кожи";
-      else if (type === "sensitive") skinLabel = "чувствительной кожи";
+UI --> ORD
+ORD --> CAT
 
-      const budgetText = budget ? ` (ориентир до ~${budget} ₽)` : "";
+UI --> AN
+AUTH --> AN
+REC --> AN
+ORD --> AN
+@enduml</code></pre>
+      </details>
+    </div>
 
-      const rec = $("recommendations");
-      if (rec){
-        rec.innerHTML = `
-          <div class="recommendation"><b>Очищение:</b> мягкий гель/пенка для ${skinLabel}.</div>
-          <div class="recommendation"><b>Тонизация:</b> успокаивающий тонер без спирта (по потребности).</div>
-          <div class="recommendation"><b>Сыворотка:</b> ниацинамид/гиалуроновая кислота — по запросу${budgetText}.</div>
-          <div class="recommendation"><b>Крем:</b> увлажняющий крем с церамидами/скваланом.</div>
-          <div class="recommendation"><b>SPF:</b> защита SPF 30–50 каждое утро.</div>
-          <p class="note">Пример рекомендаций. В полной версии — привязка к ассортименту и истории покупок.</p>
-        `;
-      }
-    }
-  });
-</script>
+    <!-- ========== 2) ИНФОРМАЦИЯ О САЙТЕ: 2 диаграммы ========== -->
+    <div class="uml-block">
+      <h3>Информация о сайте (структура и навигация)</h3>
 
-</body>
-</html>
+      <details open>
+        <summary>State — пользовательские состояния в интерфейсе</summary>
+        <pre class="code"><code>@startuml
+[*] --> НеАвторизован
+
+state НеАвторизован {
+  [*] --> ЭкранВхода
+  ЭкранВхода --> ЭкранВхода : ошибка/валидация
+}
+
+НеАвторизован --> Авторизован : login_success
+Авторизован --> НеАвторизован : logout
+
+state Авторизован {
+  [*] --> Описание
+  Описание --> Ассистент : перейти
+  Ассистент --> Аналитика : перейти
+  Аналитика --> ТЗ : перейти
+  ТЗ --> Описание : перейти
+}
+@enduml</code></pre>
+      </details>
+
+      <details>
+        <summary>Activity — сценарий навигации и действий</summary>
+        <pre class="code"><code>@startuml
+start
+:Открыть сайт;
+if (Авторизован?) then (да)
+  :Открыть вкладку "Описание";
+else (нет)
+  :Показать форму входа;
+  :Ввести email/пароль;
+  if (Данные верны?) then (да)
+    :login_success;
+    :Открыть вкладку "Описание";
+  else (нет)
+    :Показать сообщение об ошибке;
+    stop
+  endif
+endif
+
+:Переход по вкладкам;
+:Нажать "Подобрать уход";
+:recommendation_click;
+:Выйти;
+:logout;
+stop
+@enduml</code></pre>
+      </details>
+    </div>
+
+    <!-- ========== 3) ТЕСТИРОВАНИЕ: 2 диаграммы ========== -->
+    <div class="uml-block">
+      <h3>Тестирование</h3>
+
+      <details open>
+        <summary>Activity — план тестирования</summary>
+        <pre class="code"><code>@startuml
+start
+:Проверка загрузки страниц;
+:Проверка доступности (контраст, шрифты);
+:Тест входа/выхода;
+:Тест переходов по вкладкам;
+:Тест кнопки "Подобрать уход";
+:Проверка событий в Метрике;
+:Проверка данных в GA4 (Realtime);
+if (Ошибки найдены?) then (да)
+  :Завести баги;
+  :Исправить;
+  :Повторить проверку;
+endif
+stop
+@enduml</code></pre>
+      </details>
+
+      <details>
+        <summary>Sequence — проверка аналитики событий</summary>
+        <pre class="code"><code>@startuml
+actor User
+participant "Web UI" as UI
+participant "Yandex Metrika" as YM
+participant "GA4" as GA
+
+User -> UI: Открыть сайт
+UI -> YM: hit/pageview
+UI -> GA: page_view
+
+User -> UI: Войти
+UI -> YM: goal(login_success)
+UI -> GA: event(login_success)
+
+User -> UI: Перейти вкладка
+UI -> YM: goal(tab_x)
+UI -> GA: event(tab_x)
+
+User -> UI: Подобрать уход
+UI -> YM: goal(recommendation_click)
+UI -> GA: event(recommendation_click)
+
+User -> UI: Выйти
+UI -> YM: goal(logout)
+UI -> GA: event(logout)
+@enduml</code></pre>
+      </details>
+    </div>
+
+    <!-- ========== 4) РЕАЛИЗАЦИЯ: 2 диаграммы ========== -->
+    <div class="uml-block">
+      <h3>Реализация</h3>
+
+      <details open>
+        <summary>Sequence — “Подобрать уход” (логика рекомендации)</summary>
+        <pre class="code"><code>@startuml
+actor "Клиент" as User
+participant "Web UI" as UI
+participant "Recommender" as REC
+participant "Catalog API" as CAT
+participant "Analytics" as AN
+
+User -> UI: Нажать "Подобрать уход"
+UI -> AN: event(recommendation_click)
+UI -> REC: запрос рекомендаций (профиль, тип кожи)
+REC -> CAT: получить товары по категориям
+CAT --> REC: список товаров
+REC --> UI: топ-N рекомендаций
+UI --> User: показать рекомендации
+@enduml</code></pre>
+      </details>
+
+      <details>
+        <summary>Deployment — размещение (публикация и аналитика)</summary>
+        <pre class="code"><code>@startuml
+node "Пользовательский браузер" as B
+node "GitHub Pages\n(статический хостинг)" as GH
+cloud "Yandex Metrika" as YM
+cloud "Google Analytics 4" as GA
+
+B --> GH : HTTPS запрос страниц/ресурсов
+B --> YM : отправка хитов/целей
+B --> GA : отправка событий/просмотров
+@enduml</code></pre>
+      </details>
+    </div>
+
+    <!-- ========== 5) СТАТИСТИКА: 2 диаграммы ========== -->
+    <div class="uml-block">
+      <h3>Статистика и метрики</h3>
+
+      <details open>
+        <summary>Class — модель метрик/событий</summary>
+        <pre class="code"><code>@startuml
+class Event {
+  +name: string
+  +timestamp: datetime
+  +page: string
+  +userId: string
+}
+
+class Session {
+  +sessionId: string
+  +start: datetime
+  +end: datetime
+  +device: string
+  +source: string
+  +medium: string
+}
+
+class KPI {
+  +loginRate: float
+  +tabSwitches: int
+  +recommendationClicks: int
+  +logoutRate: float
+}
+
+Session "1" o-- "*" Event
+KPI ..> Session : рассчитывается из
+@enduml</code></pre>
+      </details>
+
+      <details>
+        <summary>Activity — расчёт KPI из аналитики</summary>
+        <pre class="code"><code>@startuml
+start
+:Собрать события (GA4/Метрика);
+:Сгруппировать по сессиям;
+:Посчитать login_success;
+:Посчитать tab_x;
+:Посчитать recommendation_click;
+:Посчитать logout;
+:Сформировать KPI и вывод;
+stop
+@enduml</code></pre>
+      </details>
+    </div>
+
+  </section>
+
+</div>
